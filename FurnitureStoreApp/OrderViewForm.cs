@@ -337,8 +337,6 @@ namespace FurnitureStoreApp
                 Center = center;
             }
         }
-
-        // ── Генерация .docx без Word Interop (чистый Open XML + ZIP) ───
         private void SaveDocx(string path,
             System.Collections.Generic.List<DocxLine> lines)
         {
@@ -395,7 +393,6 @@ namespace FurnitureStoreApp
             ct.Append(" ContentType=\"application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml\"/>");
             ct.Append("</Types>");
 
-            // ── _rels/.rels ─────────────────────────────────────────────
             var rels = new System.Text.StringBuilder();
             rels.Append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
             rels.Append("<Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\">");
@@ -410,7 +407,6 @@ namespace FurnitureStoreApp
             wordRels.Append("<Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\">");
             wordRels.Append("</Relationships>");
 
-            // ── Упаковываем в ZIP (.docx) ────────────────────────────────
             using (var fs = new System.IO.FileStream(
                        path, System.IO.FileMode.Create, System.IO.FileAccess.Write))
             using (var zip = new System.IO.Compression.ZipArchive(
