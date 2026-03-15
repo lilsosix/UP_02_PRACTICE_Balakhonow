@@ -15,11 +15,10 @@ namespace FurnitureStoreApp
         private DataTable ordersTable;
         private DataView ordersView;
 
-        // ── Пагинация ────────────────────────────────────────────────
         private const int PageSize    = 20;
         private int       _currentPage = 1;
         private int       _totalPages  = 1;
-        private DataTable _filteredTable; // текущая отфильтрованная таблица
+        private DataTable _filteredTable; 
 
         // ── Цвета статусов (Issue #10) ───────────────────────────────
         private static readonly System.Collections.Generic.Dictionary<string, Color> StatusColors =
@@ -28,7 +27,7 @@ namespace FurnitureStoreApp
                 { "Принят",    Color.FromArgb(220, 235, 255) }, // голубой
                 { "В пути",    Color.FromArgb(255, 255, 200) }, // жёлтый
                 { "Доставлен", Color.FromArgb(220, 255, 220) }, // зелёный
-                { "Завершён",  Color.FromArgb(200, 230, 200) }, // тёмно-зелёный
+                { "Завершён",  Color.FromArgb(200, 230, 200) }, // тёмно-ёный
                 { "Отменен",   Color.FromArgb(255, 210, 210) }, // красный
             };
 
@@ -65,8 +64,6 @@ namespace FurnitureStoreApp
                 ApplyFilters();
             };
             this.cmbSort.SelectedIndexChanged += cmbSort_SelectedIndexChanged;
-
-            // Подсказка на легенде цветов (Issue #10)
             var toolTip = new ToolTip();
             toolTip.SetToolTip(lblLegend,
                 "Расшифровка цветов строк:\n" +
@@ -76,13 +73,11 @@ namespace FurnitureStoreApp
                 "  Зелёный — Завершён (закрыт)\n" +
                 "  Розовый — Отменен");
 
-            // Рисуем цветные квадратики рядом с надписями
             lblLegend.Paint += LblLegend_Paint;
         }
 
         private void LblLegend_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
-            // Квадратики перед каждым названием статуса
             Color[] colors = {
                 Color.FromArgb(220, 235, 255), // Принят
                 Color.FromArgb(255, 255, 200), // В пути
@@ -179,8 +174,6 @@ namespace FurnitureStoreApp
                 }
 
                 ordersView = new DataView(ordersTable);
-
-                // Пагинация инициализируется здесь — DataSource выставит UpdatePagination
                 _currentPage = 1;
                 UpdatePagination();
             }
@@ -230,14 +223,11 @@ namespace FurnitureStoreApp
 
             ordersView.RowFilter = filter;
 
-            // При любом изменении фильтра сбрасываем на первую страницу
             _currentPage = 1;
             UpdatePagination();
         }
 
-        // ════════════════════════════════════════════════════════════════
         // ISSUE #8 — Пагинация
-        // ════════════════════════════════════════════════════════════════
         private void UpdatePagination()
         {
             if (ordersView == null) return;
@@ -287,7 +277,7 @@ namespace FurnitureStoreApp
 
             for (int p = 1; p <= _totalPages; p++)
             {
-                int pageNum = p; // захват для лямбды
+                int pageNum = p; 
                 var btn = new Button
                 {
                     Text      = p.ToString(),
@@ -316,9 +306,7 @@ namespace FurnitureStoreApp
             if (_currentPage < _totalPages) { _currentPage++; UpdatePagination(); }
         }
 
-        // ════════════════════════════════════════════════════════════════
         // ISSUE #10 — Условное форматирование строк по статусу
-        // ════════════════════════════════════════════════════════════════
         private void ColorizeRows()
         {
             if (!dataGridViewOrders.Columns.Contains("Статус")) return;
@@ -412,9 +400,6 @@ namespace FurnitureStoreApp
             }
         }
 
-        // ═══════════════════════════════════════════════════════════════
-        //  ЛИСТ 1: СВОДНЫЙ ОТЧЁТ  (EPPlus)
-        // ═══════════════════════════════════════════════════════════════
         private void BuildSummarySheet(ExcelPackage pkg, string periodLabel,
             string statusLabel, DateTime pStart, DateTime pEnd)
         {
@@ -583,9 +568,6 @@ namespace FurnitureStoreApp
             return row;
         }
 
-        // ═══════════════════════════════════════════════════════════════
-        //  ЛИСТ 2: ДЕТАЛИЗАЦИЯ  (EPPlus)
-        // ═══════════════════════════════════════════════════════════════
         private void BuildDetailSheet(ExcelPackage pkg, string periodLabel)
         {
             var ws = pkg.Workbook.Worksheets.Add("Детализация");
@@ -656,7 +638,6 @@ namespace FurnitureStoreApp
             ws.Cells[ws.Dimension.Address].AutoFitColumns();
         }
 
-        // ── Хелперы EPPlus ─────────────────────────────────────────────
         private void WriteCell(ExcelWorksheet ws, int row, int col, string value,
             bool bold = false, float size = 11, bool italic = false)
         {
@@ -677,7 +658,6 @@ namespace FurnitureStoreApp
             cell.Style.Font.Size = 12;
             cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
             cell.Style.Fill.BackgroundColor.SetColor(bg);
-            // белый текст для тёмных фонов, чёрный для жёлтого
             bool darkBg = bg != System.Drawing.Color.FromArgb(255, 192, 0);
             cell.Style.Font.Color.SetColor(
                 darkBg ? System.Drawing.Color.White : System.Drawing.Color.Black);
@@ -715,7 +695,7 @@ namespace FurnitureStoreApp
             int orderId = Convert.ToInt32(dataGridViewOrders.SelectedRows[0].Cells["Номер заказа"].Value);
             using (OrderViewForm viewForm = new OrderViewForm(connection, orderId))
                 viewForm.ShowDialog();
-            LoadOrders(); // обновляем список после возможной смены статуса
+            LoadOrders(); 
         }
 
         private void lblLegend_Click(object sender, EventArgs e)
