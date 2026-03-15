@@ -20,7 +20,7 @@ namespace FurnitureStoreApp
         private int       _totalPages  = 1;
         private DataTable _filteredTable; 
 
-        // ── Цвета статусов (Issue #10) ─────────────────────────────
+        // ── Цвета статусов (Issue #10) ────────────────────────────
         private static readonly System.Collections.Generic.Dictionary<string, Color> StatusColors =
             new System.Collections.Generic.Dictionary<string, Color>
             {
